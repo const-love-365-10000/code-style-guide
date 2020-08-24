@@ -406,11 +406,45 @@ boolean属性指不需要声明取值的属性，XHTML需要每个属性声明�
 
 ## 命名规则
 
-命名采用小写字母+短横线分隔的方式，如
+类名采用小写字母+短横线分隔的方式，如
 
 `menu-home`
 
-## 关于空格
+id采用小驼峰式命名
+
+scss中的变量、函数、混合、placeholder采用小驼峰式命名
+
+```css
+/* class */
+.element-content {
+    ...
+}
+
+/* id */
+#myDialog {
+    ...
+}
+
+/* 变量 */
+$colorBlack: #000;
+
+/* 函数 */
+@function pxToRem($px) {
+    ...
+}
+
+/* 混合 */
+@mixin centerBlock {
+    ...
+}
+
+/* placeholder */
+%myDialog {
+    ...
+}
+```
+
+## 空格
 
 以下几种情况不需要空格：
 
@@ -490,7 +524,7 @@ boolean属性指不需要声明取值的属性，XHTML需要每个属性声明�
 }
 ```
 
-## 关于空行
+## 空行
 
 以下几种情况需要空行：
 
@@ -524,7 +558,7 @@ boolean属性指不需要声明取值的属性，XHTML需要每个属性声明�
 }
 ```
 
-## 关于换行
+## 换行
 
 以下几种情况不需要换行：
 
@@ -559,7 +593,7 @@ boolean属性指不需要声明取值的属性，XHTML需要每个属性声明�
 }
 ```
 
-## 关于注释
+## 注释
 
 注释统一用'/* */'（scss中也不要用'//'），
 
@@ -572,6 +606,165 @@ boolean属性指不需要声明取值的属性，XHTML需要每个属性声明�
  * Modal header
  */
 ```
+
+## 引号
+
+最外层统一使用双引号；
+
+url的内容要用引号；
+
+属性选择器中的属性值需要引号。
+
+```css
+li[data-type="single"] {
+    ...
+}
+```
+
+## 属性声明顺序
+
+相关的属性声明按不同的作用做分组处理，组之间需要有一个空行。
+
+若同时书写简写属性和其包含的属性，比如`margin`和`margin-top`时，简写属性写在前面
+
+无前缀的标准属性应该写在有前缀的属性后面
+
+```css
+.declaration-order {
+    display: block;
+    float: right;
+
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    
+    border: 1px solid #e5e5e5;
+    border-radius: 3px;
+    width: 100px;
+    height: 100px;
+    
+    margin: 5px;
+    margin-top: 10px
+```
+
+## 颜色
+
+颜色16进制用小写字母；
+
+颜色16进制尽量用简写。
+
+颜色尽量少用名称。
+
+## 属性简写
+
+简写需要清楚属性值的正确顺序，否则建议分开声明
+
+`margin` 和 `padding` 建议使用简写
+
+常见的属性简写包括：
+
+- `font`
+- `background`
+- `transition`
+- `animation`
+
+## 媒体查询
+
+<u>**尽量将媒体查询的规则靠近与他们相关的规则，不要将他们一起放到一个独立的样式文件中，或者丢在文档的最底部，这样做只会让大家以后更容易忘记他们。**</u>
+
+```css
+.element {
+    ...
+}
+
+.element-avatar{
+    ...
+}
+
+@media (min-width: 480px) {
+    .element {
+        ...
+    }
+
+    .element-avatar {
+        ...
+    }
+}
+```
+
+
+## SCSS
+
+提交的代码中不要有 `@debug`；
+
+声明顺序：
+
+- `@extend`
+- 不包含 `@content` 的 `@include`
+- 包含 `@content` 的 `@include`
+- 自身属性
+- 嵌套规则
+
+`@import` 引入的文件不需要开头的'_'和结尾的'.scss'；
+
+嵌套最多不能超过5层；
+
+`@extend` 中使用placeholder选择器；
+
+去掉不必要的父级引用符号'&'。
+
+```scss
+/* not good */
+@import "_dialog.scss";
+
+/* good */
+@import "dialog";
+
+/* not good */
+.fatal {
+    @extend .error;
+}
+
+/* good */
+.fatal {
+    @extend %error;
+}
+
+/* not good */
+.element {
+    & > .dialog {
+        ...
+    }
+}
+
+/* good */
+.element {
+    > .dialog {
+        ...
+    }
+}
+```
+
+## 其他方面
+
+属性值'0'后面不要加单位，如`margin: 0`
+
+保留小数点前面的0（防止看代码的时候看漏，且符合生活习惯）
+
+不要在同个规则里出现重复的属性，如果重复的属性是连续的则没关系；
+
+用 `border: 0;` 代替 `border: none;`
+
+选择器建议不要超过4层（在scss中如果超过4层应该考虑用嵌套的方式来写），绝对不要超过6层。
+
+发布的代码中不要有 `@import`；
+
+尽量少用'*'选择器。
+
+# JavaScript
 
 
 
@@ -586,3 +779,4 @@ boolean属性指不需要声明取值的属性，XHTML需要每个属性声明�
 > [前端开发命名规范](https://www.jianshu.com/p/cf80698358d5)
 >
 > 
+
