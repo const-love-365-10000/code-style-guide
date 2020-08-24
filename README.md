@@ -1,4 +1,4 @@
->声明，本文《代码风格指南》整合于网上知名团队代码规范和数位前端大牛的风格指南(本文底部附上链接)。取其精华，去其糟粕，立志于写成一篇代码规范、书写方便、且为大多数人接受的代码风格指南。
+>声明，本文《前端代码风格指南》整合于网上一些比较好的风格指南(底部附上链接)，加上个人一些理解，并做了一些增删改查，取其精华，去其糟粕。
 
 # 命名规则
 
@@ -129,6 +129,46 @@ console.log(st.getName()); // => jerry：输出_name私有变量的值
 
 
 
+## css命名规则
+
+类名采用小写字母+短横线分隔的方式，如
+
+`menu-home`
+
+id采用小驼峰式命名
+
+scss中的变量、函数、混合、placeholder采用小驼峰式命名
+
+```css
+/* class */
+.element-content {
+    ...
+}
+
+/* id */
+#myDialog {
+    ...
+}
+
+/* 变量 */
+$colorBlack: #000;
+
+/* 函数 */
+@function pxToRem($px) {
+    ...
+}
+
+/* 混合 */
+@mixin centerBlock {
+    ...
+}
+
+/* placeholder */
+%myDialog {
+    ...
+}
+```
+
 # 注释规范
 
 ## 单行注释
@@ -183,21 +223,16 @@ function setInputValue(item) {
 
 实际开发中，根据需要来选择注释关键字，一般来说,至少写上`@param` 和 `@return` 。
 
-## 需要添加注释的地方
+## 需要注释的地方
 
-代码注释在一个项目的后期维护中显的尤为重要，所以我们要为每一个被复用的组件编写组件使用说明，为组件中每一个方法编写方法说明。
-
-以下情况，务必添加注释:
-
-```markdown
-1. 公共组件使用说明
-2. 各组件中重要函数或者类说明
-3. 复杂的业务逻辑处理说明
-4. 特殊情况的代码处理说明,对于代码中特殊用途的变量、存在临界值、函数中使用的hack、使用了某种算法或思路等需要进行注释描述
-7. 多重 if 判断语句
-```
-
-
+- 所有函数
+- 所有常量
+- 所有类
+- 复杂的逻辑
+- 难以理解的代码段
+- 可能存在错误的代码段
+- 浏览器特殊的HACK代码
+- 业务逻辑强相关的代码
 
 # HTML规范
 
@@ -226,9 +261,25 @@ function setInputValue(item) {
 
 ## HTML语义化
 
-应当做到HTML语义和样式分离。
+不要一套`div`走天下，善用`header`.`main`,`footer`等标签，例如用以下布局，而不是一堆无意义的div
 
-不要一套`div`走天下，善用`header`.`main`,`footer`等标签
+```html
+<body>
+    <header></header>
+    <nav></nav>
+    <main>
+        <article></article>
+        <aside></aside>
+    </main>
+    <footer></footer>
+</body>
+```
+
+## 内容、样式和行为分离
+
+html中避免写入css或js代码，js代码写入js文件中，css代码写到css文件中。
+
+尽量减少使用内联样式,内联样式的优先级很高，可能会覆盖css文件中的样式，且是直接写在html文件中，不利于后期的维护。
 
 ## HTML5 doctype
 
@@ -304,6 +355,15 @@ function setInputValue(item) {
 ## 引入CSS, JS
 
 <u>根据HTML5规范, 通常在引入CSS和JS时不需要指明 `type`，因为 `text/css` 和 `text/javascript` 分别是他们的默认值。</u>
+
+### 文件资源的引用路径
+
+引入资源使用相对路径，不要指定资源所带的具体协议 ( http:,https: ) ，除非这两者协议都不可用。
+
+不推荐：
+ `<script src="http://cdn.com/foundation.min.js"></script>`
+ 推荐：
+ `<script src="//cdn.com/foundation.min.js"></script>`
 
 ### script标签位置
 
@@ -403,46 +463,7 @@ boolean属性指不需要声明取值的属性，XHTML需要每个属性声明�
 - 使用soft tab（4个空格）。
 - 每条属性声明末尾都需要分号
 - 最外层统一使用双引号
-
-## 命名规则
-
-类名采用小写字母+短横线分隔的方式，如
-
-`menu-home`
-
-id采用小驼峰式命名
-
-scss中的变量、函数、混合、placeholder采用小驼峰式命名
-
-```css
-/* class */
-.element-content {
-    ...
-}
-
-/* id */
-#myDialog {
-    ...
-}
-
-/* 变量 */
-$colorBlack: #000;
-
-/* 函数 */
-@function pxToRem($px) {
-    ...
-}
-
-/* 混合 */
-@mixin centerBlock {
-    ...
-}
-
-/* placeholder */
-%myDialog {
-    ...
-}
-```
+- 属性名后不用空格，“:”后面要一个空格，如`margin-top: 2px`
 
 ## 空格
 
@@ -593,20 +614,6 @@ $colorBlack: #000;
 }
 ```
 
-## 注释
-
-注释统一用'/* */'（scss中也不要用'//'），
-
-缩进与下一行代码保持一致；
-
-可位于一个代码行的末尾，与代码间隔一个空格。
-
-```scss
-/*
- * Modal header
- */
-```
-
 ## 引号
 
 最外层统一使用双引号；
@@ -695,6 +702,9 @@ li[data-type="single"] {
 }
 ```
 
+## !important
+
+尽量减少使用或不使用!important，不利于后期维护。若样式无法生效，应当增加选择器的权重，而不是直接加上!important。
 
 ## SCSS
 
@@ -766,6 +776,239 @@ li[data-type="single"] {
 
 # JavaScript
 
+## 缩进
+
+使用soft tab（4个空格）。
+
+## 单行长度
+
+不要超过80，但如果编辑器开启word wrap可以不考虑单行长度。
+
+## 分号
+
+不建议省略分号（除了下面三种情况），即使JavaScript 允许省略行尾的分号，为避免出现不必要的错误，也不要省略。
+
+一下三种语法规定不需要添加分号
+
+- **for 和 while 循环**
+- **分支语句：if，switch，try**
+- **函数的声明语句**
+
+## 圆括号
+
+圆括号（parentheses）在 JavaScript 中有两种作用，一种表示函数的调用，另一种表示表达式的组合（grouping）。
+
+```js
+// 圆括号表示函数的调用
+console.log('abc');
+
+// 圆括号表示表达式的组合
+(1 + 2) * 3
+```
+
+建议可以用空格，区分这两种不同的括号。
+
+ 1. 表示函数调用和函数定义时，函数名与左括号之间没有空格。
+
+ 3. 其他情况时，前面位置的语法元素与左括号之间，都有一个空格。
+
+## 大括号
+
+建议总是使用大括号表示区块,例如`if`、`else`等这类语法即使只有一条语句，也不要省略大括号，这样方便以后添加代码。
+
+## 空行
+
+以下几种情况需要空行：
+
+- 变量声明后（当变量声明在代码块的最后一行时，则无需空行）
+- 注释前（当注释在代码块的第一行时，则无需空行）
+- 代码块后（在函数调用、数组、对象中则无需空行）
+- 文件最后保留一个空行
+
+```javascript
+// need blank line after variable declaration
+var x = 1;
+
+// not need blank line when variable declaration is last expression in the current block
+if (x >= 1) {
+    var y = x + 1;
+}
+
+var a = 2;
+
+// need blank line before line comment
+a++;
+
+function b() {
+    // not need blank line when comment is first line of block
+    return a;
+}
+
+// need blank line after blocks
+for (var i = 0; i < 2; i++) {
+    if (true) {
+        return false;
+    }
+
+    continue;
+}
+
+var obj = {
+    foo: function() {
+        return 1;
+    },
+
+    bar: function() {
+        return 2;
+    }
+};
+
+// not need blank line when in argument list, array, object
+func(
+    2,
+    function() {
+        a++;
+    },
+    3
+);
+
+var foo = [
+    2,
+    function() {
+        a++;
+    },
+    3
+];
+
+
+var foo = {
+    a: 2,
+    b: function() {
+        a++;
+    },
+    c: 3
+};
+```
+
+## 区块
+
+建议使用下面这种区块方式
+
+```js
+if(a === b){
+	...
+}
+else{
+    ...
+}
+```
+
+## 变量声明
+
+为避免var'变量提升现象，应该尽量用`let`来替代`var`
+
+且变量声明应该放到代码块头部
+
+声明规则见顶部
+
+## with 语句
+
+`with`可以减少代码的书写，但是会造成混淆。不建议使用
+
+## 相等和严格相等
+
+JavaScript 有两个表示相等的运算符：“相等”（`==`）和“严格相等”（`===`）。
+
+相等运算符会自动转换变量类型，造成很多意想不到的情况。
+
+建议只使用严格相等"==="
+
+## 语句的合并
+
+建议不要将不同目的的语句，合并成一行。
+
+```js
+// bad
+if (a = b) {
+  // ...
+}
+// good
+a = b;
+if (a) {
+  // ...
+}
+```
+
+## 自增和自减运算符
+
+自增（`++`）和自减（`--`）运算符，放在变量的前面或后面，返回的值不一样，很容易发生错误。事实上，所有的`++`运算符都可以用`+= 1`代替。
+
+```js
+++x
+// 等同于
+x += 1;
+```
+
+改用`+= 1`，代码变得更清晰了。
+
+如果不太理解自增（`++`）和自减（`--`）运算符，则尽量使用`+=`和`-=`代替。
+
+## 数组和对象
+
+对象属性名不需要加引号。除非有特殊字符，比如短横线
+
+对象以缩进的形式书写，不要写在一行；
+
+数组、对象最后不要有逗号。
+
+## null
+
+适用场景：
+
+- 初始化一个将来可能被赋值为对象的变量
+- 与已经初始化的变量做比较
+- 作为一个参数为对象的函数的调用传参
+- 作为一个返回对象的函数的返回值
+
+不适用场景：
+
+- 不要用null来判断函数调用时有无传参
+- 不要与未初始化的变量做比较
+
+## undefined
+
+永远不要直接使用undefined进行变量判断；
+
+使用typeof和字符串'undefined'对变量进行判断。
+
+```
+// not good
+if (person === undefined) {
+    ...
+}
+
+// good
+if (typeof person === 'undefined') {
+    ...
+}
+```
+
+## 杂项
+
+不要混用tab和space；
+
+不要在一处使用多个tab或space；
+
+对上下文this的引用只能使用'_this', 'that', 'self'其中一个来命名；
+
+行尾不要有空白字符；
+
+switch的falling through和no default的情况一定要有注释特别说明；
+
+不允许有空的代码块。
+
+
+
 
 
 
@@ -778,5 +1021,5 @@ li[data-type="single"] {
 >
 > [前端开发命名规范](https://www.jianshu.com/p/cf80698358d5)
 >
-> 
+> [网道-编程风格](https://wangdoc.com/javascript/features/style.html)
 
